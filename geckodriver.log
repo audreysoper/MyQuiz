@@ -10764,3 +10764,5 @@ console.warn: SearchSettings: "get: No settings file exists, new profile?" (new 
 DevTools listening on ws://127.0.0.1:55689/devtools/browser/573ae816-f225-4903-9971-6e1028bc7be1
 console.warn: LoginRecipes: "Falling back to a synchronous message for: https://myquiz.org."
 console.warn: LoginRecipes: "Falling back to a synchronous message for: https://myquiz.org."
+1681847758732	Marionette	INFO	Stopped listening on port 55697
+Dynamically enable window occlusion 1

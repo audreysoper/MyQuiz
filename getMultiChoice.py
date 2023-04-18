@@ -12,6 +12,7 @@ import urllib.request
 import os
 from concurrent.futures.thread import ThreadPoolExecutor
 import concurrent.futures as futrs
+from myPaths import loc
 
 class RotatingHeads(list):
         def __init__(self,len,ex=None):
@@ -29,6 +30,9 @@ class RotatingHeads(list):
         
         def solidify(self):
             for n in self:n=n.result()
+            new=[n.result() for n in self]
+            self.clear()
+            for n in new: self.append(n)
 
         def fin(self):
             for n in self: n.close()
@@ -69,7 +73,7 @@ def readQuizToCsv(d):
         if "Zeno" in title:
             msg.append("We don't talk about Zeno")
             return msg,title
-        quizRecord="archive/"+title+"/"+title+".csv"
+        quizRecord=loc()+title+"/"+title+".csv"
         if os.path.exists(quizRecord):
             msg.append("Don't worry,be happy")
             return msg,title
@@ -113,6 +117,7 @@ def readQuizToCsv(d):
 
 def newThread(goTo,newD,i):
     msg=[]
+    print(goTo,i)
     try:
         newD.implicitly_wait(10)
         newD.get("https://myquiz.org/Lectures")
@@ -138,6 +143,8 @@ def getQuizesOnPage(d,qRange=(range(10)),sync=False,page=None):
         for i,l in enumerate(quizLinks):
             newThread(l,d,i)
     else:
+        print(f"Got the links for {page}")
+        print(quizLinks)
         return quizLinks
     
         
@@ -157,8 +164,8 @@ def multiPageMaster(d,start=2,end=0):
                 page=f"https://myquiz.org/Lectures?type=0&lecturePage={i}"
                 futs.append(executor.submit(getQuizesOnPage,heads.next(),page=page))
 
-            quizLinks=[quizLinks.extend(f.result()) for f in futs]
-
+            quizLinks=[link for f in futs for link in f.result() ]
+            print(quizLinks)
             for j,link in enumerate(quizLinks):
                 future = executor.submit(newThread,link,heads.next(),j)
         except Exception as err:

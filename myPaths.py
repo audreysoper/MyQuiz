@@ -1,0 +1,2 @@
+def loc():
+ return "archive/"

@@ -2,9 +2,10 @@
 #archives of things
 /archive
 /weeks
-.log
-
+/geckodriver.log
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
+geckodriver.log
+geckodriver.log

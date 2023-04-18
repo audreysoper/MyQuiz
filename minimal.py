@@ -25,7 +25,7 @@ def setup():
     driver.implicitly_wait(10) #seconds
     driver.get("https://myquiz.org/Lectures")
     driver.set_window_size(1115, 799)
-    driver.find_element_by_id( "agreeUseCookiesAccept").click()
+    driver.find_element_by_id( "cookiescript_accept").click()
     print("Agreed to cookies")
     driver.find_element_by_id( "Email").send_keys("dave@excesss.com")
     driver.find_element_by_id( "Password").send_keys("xsXSC$STO2020!")
@@ -89,7 +89,7 @@ def createQuiz(driver):
   
 
 def  addQs(driver,myFile):
-  myFile="weeks/"+myFile
+  myFile="weeks/"+myFile+".csv"
   csv_file= open(myFile, encoding="utf-8-sig")
   csv_reader = csv.DictReader(csv_file)
   waitO = WebDriverWait(driver, 10 )
@@ -118,11 +118,11 @@ def  addQs(driver,myFile):
         
 
 
-  driver.find_element(By.NAME, "QuestionText").click()
-  driver.find_element(By.NAME, "QuestionText").send_keys("That's all folks!")
+  driver.find_element(By.NAME, "QuestionText").clear()
+  driver.find_element(By.NAME, "QuestionText").send_keys("Please bring your sheets to the trivia booth for grading!")
   driver.find_element(By.CSS_SELECTOR, ".editorRow:nth-child(8) > .editorRow__cell").click()
   driver.find_element(By.NAME, "StepTitle").click()
-  driver.find_element(By.NAME, "StepTitle").send_keys("The End")
+  driver.find_element(By.NAME, "StepTitle").send_keys("Break")
 
   driver.find_element(By.CSS_SELECTOR, ".saveQuizButton").click()
   driver.find_element(By.CSS_SELECTOR, "#createQuizModal .modal__tableCell").click()

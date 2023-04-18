@@ -13,6 +13,26 @@ import os
 from concurrent.futures.thread import ThreadPoolExecutor
 import concurrent.futures as futrs
 
+class RotatingHeads(list):
+        def __init__(self,len,ex=None):
+            for i in range(len):
+                if ex:
+                    self.append(ex.submit(setup))
+                else:
+                    self.append(setup())
+            if ex: self.solidify()
+
+        def next(self):
+            n=self.pop(0)
+            self.append(n)
+            return n
+        
+        def solidify(self):
+            for n in self:n=n.result()
+
+        def fin(self):
+            for n in self: n.close()
+
   
 
 def setup():
@@ -104,23 +124,50 @@ def newThread(goTo,newD,i):
         msg=[f"FAILED: Quiz {i}"]+msg
     print(*msg,sep="\n")
 
-def selectQuiz(d):
+def getQuizesOnPage(d,qRange=(range(10)),sync=False,page=None):
+    if page:
+        d.get(page)
     listOfQuizes= d.find_elements(By.XPATH, "//div[@id='lectureList']//div[@class='gridTimeLine_row']")
     #print(len(listOfQuizes))
     quizLinks=[]
-    for i in range(35,99):
+    for i in qRange:
         link=listOfQuizes[i].find_element(By.XPATH, ".//div[@class='lectureListItemButtons--desktop']/a")
         #print(link.get_attribute('onclick'))
         quizLinks.append(link.get_attribute('onclick'))
-        #d.execute_script(quizLinks[i])
-    workers=3
-    with ThreadPoolExecutor(max_workers=workers) as executor:
-        heads=[] #need the number of heads to be equal to 
-        for i in range(workers):
-            heads.append(executor.submit(setup).result())
+    if sync:
         for i,l in enumerate(quizLinks):
-            future = executor.submit(newThread,l,heads[i%workers],i)
-        executor.shutdown(wait=True)
-        for h in heads:
-            h.close()
+            newThread(l,d,i)
+    else:
+        return quizLinks
+    
         
+def multiPageMaster(d,start=2,end=0):
+    #If we want to go all the way to the last page, don't specifiy end
+    if not end:
+        end= d.find_elements(By.XPATH, "//li[@class='PagedList-skipToLast']/a").get_attribute('href')[:-2]
+        print(end)
+    
+    workers=1
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        heads=RotatingHeads(workers,ex=executor) #need the number of heads to be equal to 
+        quizLinks=[]
+        futs=[]
+        try:
+            for i in range(start,end):
+                page=f"https://myquiz.org/Lectures?type=0&lecturePage={i}"
+                futs.append(executor.submit(getQuizesOnPage,heads.next(),page=page))
+
+            quizLinks=[quizLinks.extend(f.result()) for f in futs]
+
+            for j,link in enumerate(quizLinks):
+                future = executor.submit(newThread,link,heads.next(),j)
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+        finally:
+            executor.shutdown(wait=True)
+            heads.fin()
+
+
+
+#TO RUN JUST A FEW ON WHATEVER PAGE WITH ONE WINDOW:
+#getQuizesOnPage(d,range(x,y),sync=True)

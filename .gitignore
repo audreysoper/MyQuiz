@@ -2,7 +2,7 @@
 #archives of things
 /archive
 /weeks
-
+.log
 
 # dependencies
 /node_modules

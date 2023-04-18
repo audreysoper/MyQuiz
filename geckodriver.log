@@ -10002,12 +10002,14 @@ console.warn: SearchSettings: "get: No settings file exists, new profile?" (new 
 DevTools listening on ws://127.0.0.1:64032/devtools/browser/d2b3ae82-6d0f-4c81-aaa5-71eef0ea7256
 console.warn: LoginRecipes: "Falling back to a synchronous message for: https://myquiz.org."
 console.warn: LoginRecipes: "Falling back to a synchronous message for: https://myquiz.org."
-1681844168856	geckodriver	INFO	Listening on 127.0.0.1:51179
-1681844171918	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "51180" "-no-remote" "-profile" "C:\\Users\\Audrey\\AppData\\Local\\Temp\\rust_mozprofilejeJiWo"
-console.warn: services.settings: Ignoring preference override of remote settings server
-console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
-1681844173006	Marionette	INFO	Marionette enabled
-Dynamically enable window occlusion 0
+JavaScript error: , line 0: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+JavaScript error: , line 0: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+JavaScript error: , line 0: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+JavaScript error: , line 0: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1681849530281	Marionette	INFO	Stopped listening on port 64040
+Dynamically enable window occlusion 1
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+ally enable window occlusion 0
 1681844173022	Marionette	INFO	Listening on port 51198
 WebDriver BiDi listening on ws://127.0.0.1:51181
 1681844174102	RemoteAgent	WARN	TLS certificate errors will be ignored for this session

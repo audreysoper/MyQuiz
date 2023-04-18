@@ -129,7 +129,7 @@ def newThread(goTo,newD,i):
         msg=[f"FAILED: Quiz {i}"]+msg
     print(*msg,sep="\n")
 
-def getQuizesOnPage(d,qRange=(range(10)),sync=False,page=None):
+def getQuizesOnPage(d,qRange=(range(100)),sync=False,page=None):
     if page:
         d.get(page)
     listOfQuizes= d.find_elements(By.XPATH, "//div[@id='lectureList']//div[@class='gridTimeLine_row']")
@@ -143,18 +143,16 @@ def getQuizesOnPage(d,qRange=(range(10)),sync=False,page=None):
         for i,l in enumerate(quizLinks):
             newThread(l,d,i)
     else:
-        print(f"Got the links for {page}")
-        print(quizLinks)
         return quizLinks
     
         
-def multiPageMaster(d,start=2,end=0):
+def multiPageMaster(d,workers,start=2,end=0):
     #If we want to go all the way to the last page, don't specifiy end
     if not end:
-        end= d.find_elements(By.XPATH, "//li[@class='PagedList-skipToLast']/a").get_attribute('href')[:-2]
+        end= int(d.find_element(By.XPATH, "//li[@class='PagedList-skipToLast']/a").get_attribute('href')[-2:])
         print(end)
+
     
-    workers=1
     with ThreadPoolExecutor(max_workers=workers) as executor:
         heads=RotatingHeads(workers,ex=executor) #need the number of heads to be equal to 
         quizLinks=[]
